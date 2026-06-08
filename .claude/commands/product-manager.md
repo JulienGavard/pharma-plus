@@ -86,13 +86,13 @@ Quand le dialogue est complet, produis **tous** les livrables suivants dans cet 
 
 Avant toute génération, applique les règles définies dans `adr-l0/ADR-L0-001-regles-lecture-adr.md`. Lis ce fichier en premier, puis lis tous les ADR de chaque niveau dans l'ordre qu'il prescrit.
 
-**Interdiction absolue** : ne pas lire `docs/epics.md` ni `docs/features.md` avant de les régénérer. La génération doit partir exclusivement du PRD et des ADR — jamais du contenu existant des fichiers cibles.
+**Interdiction absolue** : ne pas lire `docs/epics/`, `docs/features/`, ni `docs/table-de-derivation.md` avant de les régénérer. La génération doit partir exclusivement du PRD et des ADR — jamais du contenu existant des fichiers cibles.
 
 ---
 
 ### ÉTAPE PRÉALABLE OBLIGATOIRE — Table de dérivation
 
-Après lecture des ADR, construis la table de dérivation PRD → épics conformément aux règles de `adr-l2/`.
+Après lecture des ADR, construis la table de dérivation PRD → épics conformément aux règles de `adr-l2/`. Sauvegarde cette table dans `docs/table-de-derivation.md` avant de passer à la génération des épics.
 
 ---
 
