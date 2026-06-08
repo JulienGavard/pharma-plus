@@ -43,3 +43,29 @@ La décision la plus significative de cet échange porte sur la gestion des conf
 ## 2026-06-08 — Règle d'isolation de la régénération
 
 En tentant de régénérer les épics et features avec les nouvelles règles ADR, nous avons identifié un risque de contamination : si le système lit les fichiers existants avant de les réécrire, il risque d'être influencé par leur contenu plutôt que de dériver purement depuis le PRD et les ADR. Nous avons donc ajouté une interdiction explicite dans le skill : `docs/epics.md` et `docs/features.md` ne doivent jamais être lus avant une régénération. La source unique de vérité est le PRD lu à travers le prisme des ADR — rien d'autre.
+
+## 2026-06-08 — Première régénération propre sous gouvernance ADR complète
+
+Nous avons régénéré `docs/epics.md` et `docs/features.md` en appliquant pour la première fois l'ensemble du dispositif ADR mis en place lors des sessions précédentes. Les fichiers existants avaient été supprimés volontairement afin d'éliminer toute contamination. La génération a démarré par la lecture ordonnée des ADR-L0, L2 et L3, puis par la construction de la table de dérivation PRD → épics avant tout écriture.
+
+Le résultat est sensiblement différent de la première tentative : 4 épics au lieu de 5, et 9 features au lieu de 16, tous en Lot 1. La réduction n'est pas un appauvrissement — elle reflète une dérivation plus stricte, ancrée uniquement dans ce que le PRD formule explicitement. L'épic "Intégration CIP/ANSM" a notamment disparu en tant qu'entité autonome : il s'agissait d'une contrainte technique transversale, non d'un axe de valeur utilisateur, et elle est désormais correctement absorbée dans les épics "Inventaire du stock" et "Suivi des économies". De même, la feature 4.4 du Lot 2 (automatisation du taux mutuelle) n'a pas été recréée, faute d'ancrage explicite dans le PRD actuel.
+
+Ce cycle complet — isolation, lecture des ADR, table de dérivation, génération — est la preuve que le dispositif de gouvernance fonctionne : le même PRD, relu avec le même prisme, produit une structure cohérente et traçable.
+
+## 2026-06-08 — Deux nouvelles règles de gouvernance L0 : journal et immutabilité
+
+Nous avons ajouté deux ADR de niveau L0 qui renforcent l'intégrité du système de gouvernance. Le premier — ADR-L0-002 — formalise l'interdiction de lire `JOURNAL.md` lors de la génération des épics et features. La raison est simple : le journal raconte ce qui a été produit par le passé, et le lire avant de générer risque d'ancrer le résultat dans l'historique plutôt que dans le PRD. Si une décision passée doit contraindre une génération future, elle doit passer par un ADR — pas par le récit.
+
+Le second — ADR-L0-003 — pose le principe d'immutabilité des ADR : un ADR existant ne peut jamais être modifié, quel que soit son niveau. Toute évolution donne lieu à un nouvel ADR, numéroté dans la continuité. Ce principe est apparu naturellement : en tentant de modifier ADR-L0-001 pour y ajouter la règle sur le journal, l'utilisateur a refusé et demandé de créer un nouvel ADR à la place — geste qui a lui-même illustré et justifié ADR-L0-003. La règle s'applique d'ailleurs à elle-même : ADR-L0-003 ne peut pas être modifié.
+
+## 2026-06-08 — Affinements des skills : point d'entrée et comparaison post-génération
+
+Nous avons affiné le skill Product Manager sur deux points. D'abord, son point d'entrée : plutôt que de poser une question ouverte ("où en es-tu avec ton idée ?"), il pose désormais une alternative directe — explorer une idée ou lancer la génération des épics et features. Ce changement évite les tours de dialogue inutiles quand le PRD est déjà validé et que l'on veut simplement régénérer les artefacts.
+
+Ensuite, une étape de comparaison a été ajoutée après chaque génération : le skill lit le journal pour retrouver la dernière génération documentée et présente un diff en langage naturel — épics apparus ou disparus, features déplacées entre lots. Cette étape comble un manque : jusqu'ici, il fallait comparer soi-même les fichiers pour comprendre ce qui avait changé. Notons que cette lecture du journal intervient après la génération, ce qui reste conforme à ADR-L0-002 qui interdit uniquement la lecture pendant la génération.
+
+## 2026-06-08 — Un fichier par épic et par feature : correction de niveau et première application d'ADR-L0-003
+
+Nous avons décidé que chaque épic et chaque feature serait désormais écrit dans son propre fichier, plutôt que regroupés dans `docs/epics.md` et `docs/features.md`. La règle pour les épics va dans `adr-l2/`, celle pour les features dans `adr-l3/`. Cependant, par erreur, les premiers ADR ont été créés au mauvais niveau — la règle sur les épics a atterri en L1 (qui gouverne le PRD), et celle sur les features en L2 (qui gouverne les épics).
+
+C'est la première fois qu'ADR-L0-003 s'est appliqué comme contrainte réelle : impossible de corriger les mauvais ADR en les modifiant. Nous avons donc créé des ADR d'annulation dans les mêmes dossiers (ADR-L1-004 et ADR-L2-003), puis les deux ADR corrects aux bons niveaux (ADR-L2-004 et ADR-L3-001). L'utilisateur a ensuite demandé d'ajouter un statut "Annulé" directement sur les mauvais ADR — ce qui a également été refusé pour la même raison. Il a accepté cette cohérence : l'immuabilité s'applique même quand c'est inconfortable.

@@ -1,39 +1,35 @@
 # Épics — Pharma Plus
 
-## Epic 1 — Gestion du stock
-**Valeur** : L'utilisateur sait en temps réel ce qu'il a chez lui, en quelle quantité et jusqu'à quand
-**Scope** : Ajout, consultation, mise à jour et suppression des médicaments en stock. Exclut les alertes (Epic 2) et la résolution des données médicament (Epic 3)
+## Inventaire du stock
+**Valeur** : L'utilisateur sait à tout moment ce qu'il possède, en quelle quantité, et jusqu'à quand.
+**Scope** : Inclut ajout par scan, ajout manuel, consultation du stock, mise à jour des quantités, recherche rapide. Exclut toute recommandation médicale ou posologique.
 **Priorité** : Critique
 **Lot** : Lot 1
+**Source PRD** : Objectif du produit (visibilité permanente), Critères de succès 1, 2, 4, Contrainte technique (scan offline, base CIP/ANSM), Contrainte business (zéro friction)
 
 ---
 
-## Epic 2 — Alertes de péremption
-**Valeur** : L'utilisateur est prévenu avant qu'un médicament ne périsse, sans avoir à surveiller lui-même
-**Scope** : Notifications push et indicateurs visuels pour les médicaments proches de la date de péremption. Exclut les alertes de stock faible
+## Alertes & prévention du gaspillage
+**Valeur** : L'utilisateur est prévenu avant qu'un médicament ne périsse, sans avoir à surveiller lui-même son stock.
+**Scope** : Inclut alertes de péremption imminente. Exclut les recommandations de renouvellement d'ordonnance ou de dosage.
 **Priorité** : Haute
 **Lot** : Lot 1
+**Source PRD** : Objectif du produit (éviter gaspillage, éviter prises périmées), Critère de succès 3
 
 ---
 
-## Epic 3 — Intégration catalogue CIP/ANSM
-**Valeur** : L'ajout d'un médicament est instantané — un scan suffit, le reste est automatique
-**Scope** : Résolution du médicament depuis le code-barres CIP, récupération des informations produit (nom, forme, dosage), du prix public et du taux de remboursement Sécurité Sociale. Fallback saisie manuelle si le médicament est absent de la base
-**Priorité** : Critique
-**Lot** : Lot 1
-
----
-
-## Epic 4 — Estimation des économies
-**Valeur** : L'utilisateur voit concrètement combien il a économisé sur son reste à charge grâce à l'application
-**Scope** : Calcul du reste à charge évité par médicament et cumul sur la durée. En Lot 1, le taux mutuelle est saisi manuellement. En Lot 2, il est récupéré automatiquement
+## Suivi des économies & reste à charge
+**Valeur** : L'utilisateur visualise les économies réalisées grâce à l'optimisation de son stock, calculées sur son reste à charge réel.
+**Scope** : Inclut saisie du taux mutuelle, calcul automatique du reste à charge par médicament, tableau de bord des économies cumulées. Exclut tout conseil financier ou médical.
 **Priorité** : Haute
-**Lot** : Lot 1 / Lot 2
+**Lot** : Lot 1
+**Source PRD** : Objectif du produit (estimer économies sur reste à charge), Critère de succès 5, Contrainte remboursement, ADR-L1-002
 
 ---
 
-## Epic 5 — Conformité et données personnelles
-**Valeur** : L'utilisateur garde le contrôle total sur ses données de santé
-**Scope** : Consentement RGPD, stockage local offline-first, export et suppression des données. Exclut toute synchronisation cloud en Lot 1
+## Conformité & données personnelles
+**Valeur** : L'utilisateur garde le contrôle total de ses données de santé, dans le respect du RGPD et sans obligation d'hébergeur HDS.
+**Scope** : Inclut stockage local offline-first, recueil du consentement éclairé, droit à l'effacement. Exclut l'hébergement cloud sans certification HDS.
 **Priorité** : Critique
 **Lot** : Lot 1
+**Source PRD** : Contraintes légales (RGPD, HDS, consentement explicite, droit à l'effacement), Contrainte technique (offline-first)
