@@ -69,3 +69,50 @@ Ensuite, une étape de comparaison a été ajoutée après chaque génération :
 Nous avons décidé que chaque épic et chaque feature serait désormais écrit dans son propre fichier, plutôt que regroupés dans `docs/epics.md` et `docs/features.md`. La règle pour les épics va dans `adr-l2/`, celle pour les features dans `adr-l3/`. Cependant, par erreur, les premiers ADR ont été créés au mauvais niveau — la règle sur les épics a atterri en L1 (qui gouverne le PRD), et celle sur les features en L2 (qui gouverne les épics).
 
 C'est la première fois qu'ADR-L0-003 s'est appliqué comme contrainte réelle : impossible de corriger les mauvais ADR en les modifiant. Nous avons donc créé des ADR d'annulation dans les mêmes dossiers (ADR-L1-004 et ADR-L2-003), puis les deux ADR corrects aux bons niveaux (ADR-L2-004 et ADR-L3-001). L'utilisateur a ensuite demandé d'ajouter un statut "Annulé" directement sur les mauvais ADR — ce qui a également été refusé pour la même raison. Il a accepté cette cohérence : l'immuabilité s'applique même quand c'est inconfortable.
+
+## 2026-06-08 — Première génération en fichiers individuels
+
+Nous avons régénéré les épics et features en appliquant pour la première fois ADR-L2-004 et ADR-L3-001 : chaque épic dans son propre fichier sous `docs/epics/`, chaque feature dans son propre fichier sous `docs/features/[epic]/`. Le contenu est identique à la génération précédente — 4 épics, 11 features (le "9" mentionné dans l'entrée précédente était une erreur de comptage), tous en Lot 1 — mais la structure de fichiers est entièrement différente. Cette génération valide que le système ADR permet de changer la forme des artefacts sans toucher à leur contenu.
+
+## 2026-06-08 — Vision : un harnais de tests pour passer de la convergence au déterminisme
+
+Nous avons posé l'objectif structurant de la suite du projet : passer d'une génération non déterministe à un résultat déterministe, non pas en espérant que le LLM produise toujours la même chose, mais en construisant un harnais de tests fonctionnels qui contraint la sortie. Cette entrée trace l'analyse complète qui guidera les prochains ADR.
+
+### Le recadrage fondamental
+
+Un harnais de tests ne rendra jamais la génération déterministe au sens « même sortie à l'octet près » — un LLM échantillonne, la prose variera toujours. Ce qu'il apporte, c'est de la **convergence** : il définit une *région d'acceptation* dans l'espace des sorties, et l'on régénère jusqu'à tomber dedans (« regenerate-until-green »). La conséquence est forte : **tout ce que l'on veut invariant doit devenir un test ; tout ce qui n'est pas testé reste libre de varier.** Le harnais n'est donc pas un accessoire de qualité — c'est la définition exécutable de « déterministe » pour le projet. Plus l'on encode de contraintes en tests, plus la région se resserre, plus le résultat est déterministe sur les dimensions qui comptent (structure, traçabilité, couverture, nommage), même si les phrases bougent.
+
+Corollaire de gouvernance : un ADR qui contraint la **sortie** (un fichier par épic, champ Source PRD obligatoire…) doit avoir un test correspondant. Un ADR qui contraint le **processus** (ne pas lire le journal, immuabilité des ADR) n'est pas testable sur l'artefact — il reste une garantie de procédure. Nos ADR actuels mélangent les deux sans le distinguer.
+
+### Le verrou actuel : des artefacts non lisibles par une machine
+
+Les épics et features sont aujourd'hui de la prose à clés grasses (`**Source PRD** : Critère de succès 4 (< 30 secondes)`). Un test ne peut pas vérifier de façon fiable une traçabilité exprimée en langage naturel. C'est le point de levier numéro un, et tout le reste en dépend. Trois changements structurels, par ordre de leverage :
+
+1. **Identifiant stable pour chaque élément du PRD.** « Critère de succès 4 » est positionnel — réordonner le PRD casse toutes les références. Passer à des ID stables : `PROB`, `OBJ`, `CS-1…CS-5` (critères de succès), `CL-1…` (contraintes légales), `CT-1…` (contraintes techniques), `CR-1…` (remboursement), `CB-1…` (business).
+
+2. **Frontmatter YAML sur chaque épic et feature**, la prose restant dans le corps. Un épic porterait `id`, `slug`, `titre`, `priorite`, `lot`, `source_prd: [liste d'ID]` ; une feature porterait `id`, `epic` (parent), `slug`, `priorite`, `lot`, `source_prd`. La traçabilité vérifiée à l'œil devient alors une assertion triviale : tout `source_prd` cité existe dans le PRD ; tout `epic` parent existe ; tout critère de succès est couvert par au moins un épic et au moins une feature.
+
+3. **Algorithme de slug spécifié comme fonction pure.** La règle actuelle (« accents supprimés, espaces → tirets ») est incomplète : `Suivi des économies & reste à charge` est devenu `...-et-...`, donc `&` → `et`, transformation écrite nulle part. Un test sur les noms de fichiers est impossible tant que le slug n'est pas une fonction déterministe complète (gestion de `&`, apostrophes, casse, accents, doubles tirets).
+
+### La conception du harnais
+
+Trois pièces : (1) un **schéma** par type d'artefact (JSON Schema ou équivalent) — la version dure des templates ADR-L*-000 aujourd'hui en prose ; (2) un **validateur exécutable** (un script `validate.py`) qui parse tous les artefacts et lève les violations ; (3) les **catégories de tests** :
+
+- **Structurel** : frontmatter présente, champs obligatoires non vides, valeurs d'enum valides (priorité, lot).
+- **Référentiel** : tout `source_prd` existe dans le PRD ; tout `epic` parent existe.
+- **Couverture** : chaque critère de succès du PRD → au moins un épic ET au moins une feature ; les sections volontairement non couvertes sont déclarées explicitement (ex. « pas de recommandation médicale »).
+- **Contrat de dérivation** : bijection table ↔ fichiers — tout épic de la table a un fichier, tout fichier figure dans la table. ADR-L2-001 dit déjà que la table *est* le contrat, mais rien ne le vérifie aujourd'hui.
+- **Nommage** : `slug(titre) == nom de fichier` ; numérotation des features cohérente avec le numéro d'épic.
+- **Unicité** : pas deux épics ou features partageant le même id ou slug.
+
+### Intégration dans le workflow
+
+La boucle du skill product-manager devient : lire PRD + ADR → construire la table → générer les artefacts → lancer `validate.py` → si rouge, corriger/régénérer puis revalider → si vert, diff + archiviste. La règle de gouvernance qui ferme la boucle : **un artefact qui ne passe pas le harnais n'est pas livrable.** C'est ce qui fait passer les ADR du statut de « consigne qu'on espère respectée » à « invariant garanti ».
+
+### Points bloquants à nettoyer d'abord
+
+Des incohérences qui feraient échouer le harnais dès le premier run : le PRD est à `PRD.md` (racine) alors que tous les ADR référencent `docs/PRD.md` ; les fichiers monolithiques `docs/epics.md` et `docs/features.md` existent encore alors qu'ADR-L2-004 / L3-001 les ont remplacés par les dossiers (deux sources de vérité) ; le numéro d'épic n'est défini nulle part alors que les features `1.x` le présupposent ; `questions-ouvertes.md` à la racine fait doublon avec la section « Questions ouvertes » du template PRD.
+
+### Ordre recommandé
+
+(1) Nettoyer les bloquants ; (2) retrofiter ID + frontmatter sur PRD, épics et features (touche le PRD → ADR-L1 obligatoire) ; (3) écrire le schéma + `validate.py` ; (4) brancher la boucle dans le skill et lier chaque ADR-de-sortie à son test. Chacune de ces étapes mérite probablement son propre ADR.
