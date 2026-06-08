@@ -86,6 +86,8 @@ Quand le dialogue est complet, produis **tous** les livrables suivants dans cet 
 
 Avant toute génération, applique les règles définies dans `adr-l0/ADR-L0-001-regles-lecture-adr.md`. Lis ce fichier en premier, puis lis tous les ADR de chaque niveau dans l'ordre qu'il prescrit.
 
+**Interdiction absolue** : ne pas lire `docs/epics.md` ni `docs/features.md` avant de les régénérer. La génération doit partir exclusivement du PRD et des ADR — jamais du contenu existant des fichiers cibles.
+
 ---
 
 ### ÉTAPE PRÉALABLE OBLIGATOIRE — Table de dérivation

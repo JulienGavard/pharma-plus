@@ -39,3 +39,7 @@ Nous avons également clarifié que la notion d'allotissement (Lot) appartient e
 Nous avons ajouté un niveau zéro à la hiérarchie des ADR : `adr-l0/` gouverne les règles de lecture et d'application des ADR eux-mêmes. L'ADR-L0-001 formalise trois principes : lecture exhaustive de tous les fichiers d'un dossier avant génération, ordre de lecture numérique croissant, et exhaustivité garantie même pour les ADR ajoutés après la création du skill.
 
 La décision la plus significative de cet échange porte sur la gestion des conflits. Nous avons explicitement refusé que le système tente de résoudre seul une contradiction entre deux ADR. À la place, toute génération est suspendue et un fichier de conflit est créé dans `conflits/` pour être résolu par le chef d'orchestre. Cette règle traduit un choix de gouvernance clair : l'autonomie du système a des limites, et les contradictions dans les règles métier ne sont pas de son ressort.
+
+## 2026-06-08 — Règle d'isolation de la régénération
+
+En tentant de régénérer les épics et features avec les nouvelles règles ADR, nous avons identifié un risque de contamination : si le système lit les fichiers existants avant de les réécrire, il risque d'être influencé par leur contenu plutôt que de dériver purement depuis le PRD et les ADR. Nous avons donc ajouté une interdiction explicite dans le skill : `docs/epics.md` et `docs/features.md` ne doivent jamais être lus avant une régénération. La source unique de vérité est le PRD lu à travers le prisme des ADR — rien d'autre.
