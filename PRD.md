@@ -32,7 +32,7 @@ Le problème se crée au moment de la prescription et se concrétise à la pharm
 
 ## Objectif du produit
 
-Donner à l'utilisateur une visibilité permanente sur son stock de médicaments — ce qu'il a, en quelle quantité, et jusqu'à quand — afin d'éviter les achats inutiles, le gaspillage et les prises de médicaments périmés.
+Donner à l'utilisateur une visibilité permanente sur son stock de médicaments — ce qu'il a, en quelle quantité, et jusqu'à quand — afin d'éviter les achats inutiles, le gaspillage et les prises de médicaments périmés. L'application lui permet également d'estimer les économies réalisées sur son reste à charge grâce à l'optimisation de son stock.
 
 ## Critères de succès
 
@@ -40,6 +40,7 @@ Donner à l'utilisateur une visibilité permanente sur son stock de médicaments
 - L'utilisateur ne rachète plus un médicament qu'il possède déjà
 - L'utilisateur reçoit une alerte avant qu'un médicament ne périsse
 - Le stock est maintenu à jour sans friction : moins de 30 secondes pour ajouter ou consommer une boîte
+- L'utilisateur peut consulter à tout moment les économies estimées générées par l'application sur son reste à charge
 
 ---
 
@@ -58,7 +59,12 @@ L'application ne doit en aucun cas formuler de recommandation médicale ou posol
 ### Techniques
 
 - Le scan de code-barres doit fonctionner hors ligne
-- La base de données des médicaments français (CIP/ANSM) doit être intégrée pour la récupération automatique des informations
+- La base de données des médicaments français (CIP/ANSM) doit être intégrée pour la récupération automatique des informations, incluant le prix et le taux de remboursement Sécurité Sociale
+
+### Remboursement
+
+- L'utilisateur renseigne une fois son taux de remboursement mutuelle dans ses paramètres
+- Le reste à charge est calculé automatiquement : prix − remboursement sécu − remboursement mutuelle
 
 ### Business
 
