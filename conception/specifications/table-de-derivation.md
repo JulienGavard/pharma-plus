@@ -1,7 +1,7 @@
 # Table de dérivation — PRD → Épics
 
 **Générée le** : 2026-06-08 (ID PRD ajoutés le 2026-06-09)
-**Source** : registres/produit/PRD.md + registres/produit/pdr-001
+**Source** : conception/registres/produit/PRD.md + conception/registres/produit/pdr-001
 
 Les références utilisent les identifiants stables du PRD (gdr-l1-006).
 

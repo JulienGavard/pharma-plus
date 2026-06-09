@@ -18,10 +18,10 @@ class Chemins(private val racine: Path) {
         if (fichier.exists()) fichier.inputStream().use { load(it) }
     }
 
-    val prd: Path get() = resoudre("PRD", "registres/produit/PRD.md")
-    val tableDerivation: Path get() = resoudre("TABLE_DERIVATION", "docs/table-de-derivation.md")
-    val epics: Path get() = resoudre("EPICS", "docs/epics")
-    val features: Path get() = resoudre("FEATURES", "docs/features")
+    val prd: Path get() = resoudre("PRD", "conception/registres/produit/PRD.md")
+    val tableDerivation: Path get() = resoudre("TABLE_DERIVATION", "conception/specifications/table-de-derivation.md")
+    val epics: Path get() = resoudre("EPICS", "conception/specifications/epics")
+    val features: Path get() = resoudre("FEATURES", "conception/specifications/features")
 
     private fun resoudre(cle: String, defaut: String): Path =
         racine / proprietes.getProperty(cle, defaut)

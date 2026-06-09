@@ -44,35 +44,37 @@ Chaque décision est un record immuable. On n'édite jamais le **contenu décisi
 
 ## 3. L'architecture documentaire
 
+> Tout le « non-code » est regroupé sous **`conception/`** (registres, spécifications, docs) ; le code vit sous `src/` avec les fichiers Gradle (`gdr-l0-008`). Les chemins sont centralisés dans `chemins.properties`.
+
 ### 3.1 Les trois registres par nature
 
-La taxonomie est définie par `registres/gouvernance/gdr-l0-004`. Les trois registres sont regroupés sous `registres/` (`gdr-l0-007`). Chaque nature de décision a son registre.
+La taxonomie est définie par `conception/registres/gouvernance/gdr-l0-004`. Les trois registres sont regroupés sous `conception/registres/`. Chaque nature de décision a son registre.
 
 | Registre | Dossier | Type de record | Niveaux | Format de fichier |
 |----------|---------|----------------|---------|-------------------|
-| **Gouvernance** | `registres/gouvernance/` | **GDR** (Governance Decision Record) | Oui (L0–L3) | `gdr-lX-NNN-slug.md` |
-| **Produit** | `registres/produit/` | **PDR** (Product Decision Record) | Non | `pdr-NNN-slug.md` |
-| **Architecture logicielle** | `registres/architecture/` | **ADR** (Architecture Decision Record) | Non | `adr-NNN-slug.md` |
+| **Gouvernance** | `conception/registres/gouvernance/` | **GDR** (Governance Decision Record) | Oui (L0–L3) | `gdr-lX-NNN-slug.md` |
+| **Produit** | `conception/registres/produit/` | **PDR** (Product Decision Record) | Non | `pdr-NNN-slug.md` |
+| **Architecture logicielle** | `conception/registres/architecture/` | **ADR** (Architecture Decision Record) | Non | `adr-NNN-slug.md` |
 
-Les niveaux du registre de gouvernance : `L0` gouverne les records eux-mêmes, `L1` le PRD, `L2` les épics, `L3` les features. Le registre `registres/architecture/` est **réservé** (template seul) jusqu'au démarrage du développement. Les chemins sont centralisés dans `chemins.properties` (`gdr-l0-007`).
+Les niveaux du registre de gouvernance : `L0` gouverne les records eux-mêmes, `L1` le PRD, `L2` les épics, `L3` les features. Le registre architecture est **réservé** (template seul) jusqu'au démarrage du développement.
 
 ### 3.2 Les artefacts
 
 | Artefact | Rôle | Gouverné par |
 |----------|------|--------------|
-| `registres/produit/PRD.md` | Racine du registre produit : la vision (problème, utilisateur, objectif, critères, contraintes). Chaque élément porte un **identifiant stable** (`OBJ`, `CS-1`, `CL-2`…). Édité uniquement en conséquence d'un PDR. | GDR-L1 |
-| `registres/produit/pdr-NNN-*.md` | Décisions produit (ex. `pdr-001` : estimation des économies). | GDR-L0-004 (routage) |
-| `docs/table-de-derivation.md` | Le **contrat de génération** : relie chaque élément du PRD aux épics, et fixe le numéro stable de chaque épic. | GDR-L2 |
-| `docs/epics/<slug>.md` | Un fichier par épic, avec frontmatter YAML machine-lisible. | GDR-L2 |
-| `docs/features/<slug-épic>/<N-M>-<slug>.md` | Un fichier par feature, rangé sous son épic parent. | GDR-L3 |
-| `docs/questions-ouvertes.md` | Les hypothèses et décisions ouvertes, à l'écart de la vision stable. | GDR-L1-005 |
-| `docs/roadmap.md` | La roadmap du harnais (document mouvant), externalisée de cette carte. | GDR-L0-006 |
-| `registres/architecture/adr-NNN-*.md` | Décisions techniques de réalisation (à venir). | GDR-L0-004 (routage) |
+| `conception/registres/produit/PRD.md` | Racine du registre produit : la vision (problème, utilisateur, objectif, critères, contraintes). Chaque élément porte un **identifiant stable** (`OBJ`, `CS-1`, `CL-2`…). Édité uniquement en conséquence d'un PDR. | GDR-L1 |
+| `conception/registres/produit/pdr-NNN-*.md` | Décisions produit (ex. `pdr-001` : estimation des économies). | GDR-L0-004 (routage) |
+| `conception/specifications/table-de-derivation.md` | Le **contrat de génération** : relie chaque élément du PRD aux épics, et fixe le numéro stable de chaque épic. | GDR-L2 |
+| `conception/specifications/epics/<slug>.md` | Un fichier par épic, avec frontmatter YAML machine-lisible. | GDR-L2 |
+| `conception/specifications/features/<slug-épic>/<N-M>-<slug>.md` | Un fichier par feature, rangé sous son épic parent. | GDR-L3 |
+| `conception/docs/questions-ouvertes.md` | Les hypothèses et décisions ouvertes, à l'écart de la vision stable. | GDR-L1-005 |
+| `conception/docs/roadmap.md` | La roadmap du harnais (document mouvant), externalisée de cette carte. | GDR-L0-006 |
+| `conception/registres/architecture/adr-NNN-*.md` | Décisions techniques de réalisation (à venir). | GDR-L0-004 (routage) |
 
 ### 3.3 La mémoire transverse
 
-- **`JOURNAL.md`** — le récit chronologique du projet, en langage naturel. Tenu par le skill Archiviste. Jamais lu pendant une génération d'épics/features (pour ne pas biaiser le résultat).
-- **`docs/gouvernance.md`** — la présente carte, régénérée par le Gouverneur.
+- **`JOURNAL.md`** (racine) — le récit chronologique du projet, en langage naturel. Tenu par le skill Archiviste. Jamais lu pendant une génération d'épics/features (pour ne pas biaiser le résultat).
+- **`conception/docs/gouvernance.md`** — la présente carte, régénérée par le Gouverneur.
 - **Mémoire de session** — l'état de reprise chargé automatiquement : contexte, roadmap, préférences.
 
 ---
