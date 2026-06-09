@@ -1,4 +1,4 @@
-# ADR-L1-000 — Template PRD
+# GDR-L1-000 — Template PRD
 
 **Date** : 2026-06-08
 **Statut** : Accepté

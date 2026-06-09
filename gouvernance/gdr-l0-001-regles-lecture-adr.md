@@ -1,4 +1,4 @@
-# ADR-L0-001 — Règles de lecture et d'application des ADR lors de la génération
+# GDR-L0-001 — Règles de lecture et d'application des ADR lors de la génération
 
 **Date** : 2026-06-08
 **Statut** : Accepté

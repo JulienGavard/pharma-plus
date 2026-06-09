@@ -1,6 +1,6 @@
 # Gouvernance — Pharma Plus
 
-> Ce document décrit **comment le projet est gouverné**, pas ce que le produit fait (cela, c'est le rôle du PRD). Il est la carte du système : ses principes, ses artefacts, ses règles et son flux de travail. Toute personne qui le lit doit comprendre pourquoi le projet est organisé ainsi.
+> Ce document décrit **comment le projet est gouverné**, pas ce que le produit fait (cela, c'est le rôle du PRD). Il est la carte du système : ses principes, ses artefacts, ses règles et son flux de travail. Il est régénéré par le skill **Gouverneur** à partir de l'état réel des registres.
 
 ---
 
@@ -22,65 +22,81 @@ Un harnais de tests ne rend pas le LLM déterministe — il définit une **régi
 
 Corollaire direct : **ce qui n'est pas testé reste libre de varier.** Le harnais n'est donc pas un filet de qualité optionnel — c'est la définition exécutable de « déterministe » pour ce projet. Plus on encode de contraintes en tests, plus la région d'acceptation se resserre.
 
-### 2.3 Distinguer les règles de sortie des règles de processus
+### 2.3 Deux axes de distinction orthogonaux
 
-- Une règle qui contraint la **sortie** (un fichier par épic, champ `source_prd` obligatoire, slug = fonction du titre) doit avoir un test correspondant.
-- Une règle qui contraint le **processus** (ne pas lire le journal pendant la génération, immuabilité des ADR) n'est pas testable sur l'artefact — elle reste une garantie de procédure.
+Toute décision se situe sur **deux axes indépendants** :
+
+- **La nature** — ce que la décision touche :
+  - *Gouvernance* (GDR) : comment on fabrique les specs.
+  - *Produit* (PDR) : ce que Pharma Plus fait.
+  - *Architecture logicielle* (ADR) : comment l'app est techniquement construite.
+- **La testabilité** — comment on la fait respecter :
+  - *Règle de sortie* : contraint l'artefact produit → un test peut la vérifier.
+  - *Règle de processus* : contraint la façon de travailler → garantie de procédure, non testable sur l'artefact.
+
+Les deux axes sont indépendants : une règle de gouvernance peut être de sortie (« un fichier par épic ») ou de processus (« ne pas lire le journal pendant la génération »).
 
 ### 2.4 Tracer les décisions, jamais les effacer
 
-Chaque décision structurante est un ADR immuable. On n'édite jamais une décision passée : on en ajoute une nouvelle qui la complète ou l'annule. L'historique reste toujours lisible.
+Chaque décision est un record immuable. On n'édite jamais le **contenu décisionnel** d'un record : on en ajoute un nouveau qui le complète ou l'annule. Seules les **références croisées** (citations d'autres records, chemins de fichiers) peuvent être mises à jour — assouplissement introduit par `gouvernance/gdr-l0-004` pour permettre les réorganisations sans laisser de citations caduques.
 
 ---
 
 ## 3. L'architecture documentaire
 
-### 3.1 La hiérarchie des ADR (Architecture Decision Records)
+### 3.1 Les trois registres par nature
 
-Les ADR gouvernent les artefacts par niveaux. Chaque niveau possède ses propres règles, dans son propre dossier.
+La taxonomie est définie par `gouvernance/gdr-l0-004`. Chaque nature de décision a son registre.
 
-| Niveau | Dossier | Gouverne |
-|--------|---------|----------|
-| **L0** | `adr-l0/` | Les règles de lecture et d'application des ADR eux-mêmes |
-| **L1** | `adr-l1/` | Le PRD |
-| **L2** | `adr-l2/` | Les épics |
-| **L3** | `adr-l3/` | Les features |
+| Registre | Dossier | Type de record | Niveaux | Format de fichier |
+|----------|---------|----------------|---------|-------------------|
+| **Gouvernance** | `gouvernance/` | **GDR** (Governance Decision Record) | Oui (L0–L3) | `gdr-lX-NNN-slug.md` |
+| **Produit** | `produit/` | **PDR** (Product Decision Record) | Non | `pdr-NNN-slug.md` |
+| **Architecture logicielle** | `architecture/` | **ADR** (Architecture Decision Record) | Non | `adr-NNN-slug.md` |
 
-Au sein de chaque dossier, l'ADR `000` est le template, et la numérotation croît dans l'ordre chronologique des décisions.
+Les niveaux du registre de gouvernance : `L0` gouverne les records eux-mêmes, `L1` le PRD, `L2` les épics, `L3` les features. Le registre `architecture/` est **réservé** (template seul) jusqu'au démarrage du développement.
 
-### 3.2 Les artefacts produit (`docs/`)
+### 3.2 Les artefacts
 
 | Artefact | Rôle | Gouverné par |
 |----------|------|--------------|
-| `docs/PRD.md` | La vision produit : problème, utilisateur, objectif, critères, contraintes. Chaque élément porte un **identifiant stable** (`OBJ`, `CS-1`, `CL-2`…). | L1 |
-| `docs/table-de-derivation.md` | Le **contrat de génération** : relie chaque élément du PRD aux épics qu'il justifie, et fixe le numéro stable de chaque épic. | L2 |
-| `docs/epics/<slug>.md` | Un fichier par épic, avec frontmatter YAML machine-lisible. | L2 |
-| `docs/features/<slug-épic>/<N-M>-<slug>.md` | Un fichier par feature, rangé sous son épic parent. | L3 |
-| `docs/questions-ouvertes.md` | Les hypothèses et décisions encore ouvertes, tenues à l'écart de la vision stable. | L1 |
+| `produit/PRD.md` | Racine du registre produit : la vision (problème, utilisateur, objectif, critères, contraintes). Chaque élément porte un **identifiant stable** (`OBJ`, `CS-1`, `CL-2`…). Édité uniquement en conséquence d'un PDR. | GDR-L1 |
+| `produit/pdr-NNN-*.md` | Décisions produit (ex. `pdr-001` : estimation des économies). | GDR-L0-004 (routage) |
+| `docs/table-de-derivation.md` | Le **contrat de génération** : relie chaque élément du PRD aux épics, et fixe le numéro stable de chaque épic. | GDR-L2 |
+| `docs/epics/<slug>.md` | Un fichier par épic, avec frontmatter YAML machine-lisible. | GDR-L2 |
+| `docs/features/<slug-épic>/<N-M>-<slug>.md` | Un fichier par feature, rangé sous son épic parent. | GDR-L3 |
+| `docs/questions-ouvertes.md` | Les hypothèses et décisions ouvertes, à l'écart de la vision stable. | GDR-L1-005 |
+| `docs/roadmap.md` | La roadmap du harnais (document mouvant), externalisée de cette carte. | GDR-L0-006 |
+| `architecture/adr-NNN-*.md` | Décisions techniques de réalisation (à venir). | GDR-L0-004 (routage) |
 
 ### 3.3 La mémoire transverse
 
-- **`JOURNAL.md`** — le récit chronologique du projet, en langage naturel. Lisible par quiconque, il raconte *comment on en est arrivé là*. Tenu par le skill Archiviste. Jamais lu pendant une génération (pour ne pas biaiser le résultat).
-- **Mémoire de session** (`.claude/.../memory/`) — l'état de reprise chargé automatiquement à chaque session : contexte, roadmap, préférences.
+- **`JOURNAL.md`** — le récit chronologique du projet, en langage naturel. Tenu par le skill Archiviste. Jamais lu pendant une génération d'épics/features (pour ne pas biaiser le résultat).
+- **`docs/gouvernance.md`** — la présente carte, régénérée par le Gouverneur.
+- **Mémoire de session** — l'état de reprise chargé automatiquement : contexte, roadmap, préférences.
 
 ---
 
 ## 4. Les règles de gouvernance clés
 
-| Règle | ADR | Effet |
-|-------|-----|-------|
-| **Lecture exhaustive et ordonnée des ADR** avant toute génération | L0-001 | La génération applique toujours toutes les règles à jour |
-| **Gestion des conflits** : en cas de contradiction, on ne génère pas — on crée un fichier de conflit | L0-001 | Le système ne tranche jamais seul une contradiction métier |
-| **Interdiction de lire le journal** pendant la génération | L0-002 | Le résultat dérive du PRD, pas de l'historique |
-| **Immuabilité des ADR** : on ajoute, on ne modifie jamais | L0-003 | L'historique des décisions reste intact |
-| **Isolation de la régénération** : ne pas lire les artefacts cibles avant de les réécrire | L0-001 | Pas de contamination par le contenu précédent |
-| **Toute évolution du PRD passe par un ADR-L1** | L1-001 | La vision n'évolue jamais en silence |
-| **Identifiants stables du PRD** | L1-006 | Traçabilité vérifiable par référence, pas par position |
-| **Un fichier par épic / par feature** | L2-004, L3-001 | Navigation et traçabilité fine |
-| **Numéro d'épic stable**, source = table de dérivation | L2-005 | Noms de fichiers des features déterministes |
-| **Slug = fonction pure du titre** | L2-006 | Noms de fichiers reproductibles |
-| **Frontmatter YAML** sur épics et features | L2-007, L3-002 | Métadonnées lisibles par une machine |
-| **Aucune recommandation médicale ou posologique** | L1-006 (CL-4), L3-000 | Contrainte transversale, à tous les niveaux |
+| Règle | Record source | Effet |
+|-------|---------------|-------|
+| Lecture exhaustive et ordonnée des records avant génération | `gdr-l0-001` | La génération applique toutes les règles à jour |
+| En cas de conflit entre records, ne pas générer — créer un fichier de conflit | `gdr-l0-001` | Le système ne tranche jamais seul une contradiction métier |
+| Interdiction de lire le journal pendant la génération | `gdr-l0-002` | Le résultat dérive du PRD, pas de l'historique |
+| Immuabilité du contenu décisionnel ; références croisées modifiables | `gdr-l0-003`, `gdr-l0-004` | L'historique reste intact, les réorganisations restent cohérentes |
+| Taxonomie en trois registres + routage par nature | `gdr-l0-004` | Gouvernance, produit et logiciel ne se mélangent plus |
+| Le Gouverneur vérifie la conformité GDR ; bloque et journalise un conflit en cas d'infraction | `gdr-l0-005` | Les règles deviennent contrôlées, pas seulement espérées |
+| Externalisation de la roadmap | `gdr-l0-006` | La carte stable n'est pas régénérée à chaque avancement |
+| Le PRD n'évolue qu'en conséquence d'un PDR | `gdr-l1-007`, `gdr-l0-004` | La vision ne change jamais en silence ; le PDR est le record primaire |
+| Externalisation des questions ouvertes | `gdr-l1-005` | La vision stable reste séparée des questions mouvantes |
+| Identifiants stables du PRD | `gdr-l1-006` | Traçabilité vérifiable par référence, pas par position |
+| Table de dérivation = contrat de génération | `gdr-l2-001` | Même PRD → mêmes épics, traçable |
+| Un fichier par épic / par feature | `gdr-l2-004`, `gdr-l3-001` | Navigation et traçabilité fine |
+| Numéro d'épic stable, source = table de dérivation | `gdr-l2-005` | Noms de fichiers des features déterministes |
+| Slug = fonction pure du titre | `gdr-l2-006` | Noms de fichiers reproductibles |
+| Frontmatter YAML sur épics et features | `gdr-l2-007`, `gdr-l3-002` | Métadonnées lisibles par une machine |
+| Aucune recommandation médicale ou posologique | `gdr-l1-006` (CL-4), `gdr-l3-000` | Contrainte transversale, à tous les niveaux |
 
 ---
 
@@ -91,10 +107,12 @@ La production des spécifications suit toujours le même cycle, porté par le sk
 ```
 Point d'entrée : « idée à explorer » ou « génération » ?
         │
-        ├─ Idée → dialogue socratique (problème → utilisateur → specs) → met à jour le PRD (via ADR-L1)
+        ├─ Idée → dialogue socratique (problème → utilisateur → specs)
+        │         → chaque changement produit devient un PDR ;
+        │           le PRD est édité en conséquence, jamais directement (gdr-l1-007)
         │
         └─ Génération :
-              1. Lire tous les ADR (L0 → L1 → L2 → L3, ordre croissant)
+              1. Lire tous les GDR (L0 → L3, ordre croissant)
               2. Construire et sauvegarder la table de dérivation (PRD → épics)
               3. Générer les épics (docs/epics/) puis les features (docs/features/)
               4. [cible] Lancer validate.py → si rouge, régénérer jusqu'au vert
@@ -102,7 +120,7 @@ Point d'entrée : « idée à explorer » ou « génération » ?
               6. Appeler l'Archiviste pour tracer la session
 ```
 
-La règle qui fermera la boucle : **un artefact qui ne passe pas le harnais n'est pas livrable.** C'est ce qui transformera les ADR de « consignes qu'on espère respectées » en « invariants garantis ».
+La règle qui fermera la boucle : **un artefact qui ne passe pas le harnais n'est pas livrable.** C'est ce qui transformera les GDR de « consignes qu'on espère respectées » en « invariants garantis » — un contrôle que le Gouverneur exerce déjà manuellement (`gdr-l0-005`).
 
 ---
 
@@ -110,33 +128,18 @@ La règle qui fermera la boucle : **un artefact qui ne passe pas le harnais n'es
 
 | Skill | Rôle |
 |-------|------|
-| **Product Manager** | Clarifie la vision par le dialogue, puis génère PRD / épics / features en appliquant les ADR. Ne descend jamais dans le détail sans demande explicite. |
+| **Product Manager** | Clarifie la vision par le dialogue, puis génère PRD / épics / features en appliquant les GDR. Tout changement produit devient un PDR ; il ne descend jamais dans le détail sans demande explicite. |
 | **Archiviste** | Tient le `JOURNAL.md` : à la fin de chaque session, ajoute une entrée narrative racontant les décisions prises et pourquoi. |
+| **Gouverneur** | **Gardien de la conformité GDR** : vérifie qu'aucune règle n'est enfreinte (par l'utilisateur, le Product Manager ou Claude) ; en cas d'infraction, **stoppe la modification et journalise un conflit** dans `conflits/` (`gdr-l0-005`). Maintient en sous-produit cette carte `docs/gouvernance.md`. |
 
 ---
 
-## 7. La roadmap du harnais
+## 7. La roadmap
 
-L'objectif de déterminisme se construit en quatre étapes, chacune cadrée par ses propres ADR.
-
-| Étape | Contenu | État |
-|-------|---------|------|
-| **1. Nettoyer les bloquants** | PRD sous `docs/`, questions-ouvertes gouvernées, numéro d'épic fixé | ✅ Fait |
-| **2. ID + frontmatter** | Identifiants stables du PRD, slug pur, frontmatter YAML des épics/features | ✅ Cadre posé (ADR + PRD instrumenté) |
-| **3. Le validateur** | Un schéma par artefact + un script `validate.py` qui lève les violations | ⏳ À venir |
-| **4. Brancher la boucle** | Intégrer `validate.py` au flux du Product Manager, lier chaque ADR-de-sortie à son test | ⏳ À venir |
-
-### Les catégories de tests visées
-
-- **Structurel** — frontmatter présente, champs obligatoires non vides, énumérations valides.
-- **Référentiel** — tout `source_prd` existe dans le PRD ; tout épic parent existe.
-- **Couverture** — chaque élément couvrable du PRD est porté par ≥ 1 épic et ≥ 1 feature ; les interdictions transversales (ex. CL-4) en sont exclues.
-- **Contrat de dérivation** — bijection entre la table et les fichiers générés.
-- **Nommage** — `slug == slugify(titre) == nom de fichier`, numérotation cohérente.
-- **Unicité** — pas deux artefacts partageant le même `id` ou `slug`.
+La roadmap du harnais est **externalisée** dans [`docs/roadmap.md`](roadmap.md) (`gdr-l0-006`) : c'est un document mouvant, dont l'état évolue à chaque avancement, tenu à l'écart des principes stables de cette carte.
 
 ---
 
 ## 8. En une phrase
 
-> Le projet traite ses propres spécifications comme du code : versionnées, gouvernées par des décisions immuables, dérivées d'une source unique, et — à terme — validées par des tests qui rendent leur génération reproductible.
+> Le projet traite ses propres spécifications comme du code : versionnées, gouvernées par des décisions immuables rangées par nature, dérivées d'une source unique, et — à terme — validées par des tests qui rendent leur génération reproductible.

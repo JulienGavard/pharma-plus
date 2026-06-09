@@ -1,4 +1,4 @@
-# ADR-L2-003 — Annulation de ADR-L2-002
+# GDR-L2-003 — Annulation de GDR-L2-002
 
 **Date** : 2026-06-08
 **Statut** : Accepté

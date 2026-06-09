@@ -1,4 +1,4 @@
-# ADR-L1-005 — Externalisation des questions ouvertes
+# GDR-L1-005 — Externalisation des questions ouvertes
 
 **Date** : 2026-06-09
 **Statut** : Accepté

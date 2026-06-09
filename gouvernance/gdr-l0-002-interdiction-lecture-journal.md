@@ -1,4 +1,4 @@
-# ADR-L0-002 — Interdiction de lecture du journal lors de la génération
+# GDR-L0-002 — Interdiction de lecture du journal lors de la génération
 
 **Date** : 2026-06-08
 **Statut** : Accepté

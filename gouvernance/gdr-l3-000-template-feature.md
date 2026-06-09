@@ -1,4 +1,4 @@
-# ADR-L3-000 — Template feature
+# GDR-L3-000 — Template feature
 
 **Date** : 2026-06-08
 **Statut** : Accepté

@@ -1,4 +1,4 @@
-# ADR-L3-002 — Frontmatter YAML des features
+# GDR-L3-002 — Frontmatter YAML des features
 
 **Date** : 2026-06-09
 **Statut** : Accepté

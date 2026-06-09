@@ -1,4 +1,4 @@
-# ADR-L2-007 — Frontmatter YAML des épics
+# GDR-L2-007 — Frontmatter YAML des épics
 
 **Date** : 2026-06-09
 **Statut** : Accepté

@@ -1,4 +1,4 @@
-# ADR-L2-002 — Un fichier par feature
+# GDR-L2-002 — Un fichier par feature
 
 **Date** : 2026-06-08
 **Statut** : Accepté

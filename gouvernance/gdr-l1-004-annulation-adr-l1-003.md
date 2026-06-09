@@ -1,4 +1,4 @@
-# ADR-L1-004 — Annulation de ADR-L1-003
+# GDR-L1-004 — Annulation de GDR-L1-003
 
 **Date** : 2026-06-08
 **Statut** : Accepté

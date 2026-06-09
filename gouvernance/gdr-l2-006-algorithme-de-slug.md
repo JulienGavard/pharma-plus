@@ -1,4 +1,4 @@
-# ADR-L2-006 — Algorithme de slug (fonction pure)
+# GDR-L2-006 — Algorithme de slug (fonction pure)
 
 **Date** : 2026-06-09
 **Statut** : Accepté

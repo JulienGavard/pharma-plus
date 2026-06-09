@@ -1,4 +1,4 @@
-# ADR-L2-001 — Règles de génération des épics
+# GDR-L2-001 — Règles de génération des épics
 
 **Date** : 2026-06-08
 **Statut** : Accepté

@@ -1,4 +1,4 @@
-# ADR-L1-006 — Identifiants stables des éléments du PRD
+# GDR-L1-006 — Identifiants stables des éléments du PRD
 
 **Date** : 2026-06-09
 **Statut** : Accepté

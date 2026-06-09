@@ -1,4 +1,4 @@
-# ADR-L2-004 — Un fichier par épic
+# GDR-L2-004 — Un fichier par épic
 
 **Date** : 2026-06-08
 **Statut** : Accepté

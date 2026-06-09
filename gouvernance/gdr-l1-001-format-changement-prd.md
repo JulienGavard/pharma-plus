@@ -1,4 +1,4 @@
-# ADR-L1-001 — Format des ADR de niveau 1 (changements PRD)
+# GDR-L1-001 — Format des ADR de niveau 1 (changements PRD)
 
 **Date** : 2026-06-08
 **Statut** : Accepté

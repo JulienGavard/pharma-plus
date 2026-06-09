@@ -1,4 +1,4 @@
-# ADR-L2-000 — Template épic
+# GDR-L2-000 — Template épic
 
 **Date** : 2026-06-08
 **Statut** : Accepté

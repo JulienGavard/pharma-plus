@@ -1,4 +1,4 @@
-# ADR-L0-003 — Immutabilité des ADR
+# GDR-L0-003 — Immutabilité des ADR
 
 **Date** : 2026-06-08
 **Statut** : Accepté

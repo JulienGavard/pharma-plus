@@ -1,4 +1,4 @@
-# ADR-L2-005 — Numérotation stable des épics
+# GDR-L2-005 — Numérotation stable des épics
 
 **Date** : 2026-06-09
 **Statut** : Accepté
