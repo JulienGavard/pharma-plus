@@ -22,9 +22,11 @@
 
 ## Épics produits
 
-| Épic | Priorité | Lot |
-|---|---|---|
-| Inventaire du stock | Critique | Lot 1 |
-| Alertes & prévention du gaspillage | Haute | Lot 1 |
-| Suivi des économies & reste à charge | Haute | Lot 1 |
-| Conformité & données personnelles | Critique | Lot 1 |
+Le numéro d'épic est stable et fait autorité (voir ADR-L2-005) : il détermine le préfixe `N` des features (`N.M`) et ne change jamais une fois attribué.
+
+| N° | Épic | Priorité | Lot |
+|---|---|---|---|
+| 1 | Inventaire du stock | Critique | Lot 1 |
+| 2 | Alertes & prévention du gaspillage | Haute | Lot 1 |
+| 3 | Suivi des économies & reste à charge | Haute | Lot 1 |
+| 4 | Conformité & données personnelles | Critique | Lot 1 |
