@@ -7,7 +7,6 @@ import pharmaplus.harnais.domaine.Prd
 import pharmaplus.harnais.domaine.Specifications
 import pharmaplus.harnais.domaine.TableDeDerivation
 import java.nio.file.Path
-import kotlin.io.path.div
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
 import kotlin.io.path.listDirectoryEntries
@@ -18,9 +17,11 @@ import kotlin.io.path.readText
 /**
  * Logique technique : reconstruit les objets métier (Prd, Epics, Features, Table)
  * à partir du système de fichiers. Seul endroit qui sait ce qu'est un fichier .md.
+ * Les chemins proviennent de [Chemins] (source unique : chemins.properties).
  */
 class DepotDeSpecifications(private val racine: Path) {
 
+    private val chemins = Chemins(racine)
     private val lecteur = LecteurDeFrontmatter()
 
     fun charger(): Specifications = Specifications(
@@ -31,7 +32,7 @@ class DepotDeSpecifications(private val racine: Path) {
     )
 
     private fun chargerPrd(): Prd? {
-        val fichier = racine / "produit" / "PRD.md"
+        val fichier = chemins.prd
         if (!fichier.exists()) return null
         val regexId = Regex("""\[(PROB|USR|OBJ|CS-\d+|CL-\d+|CT-\d+|CR-\d+|CB-\d+)]""")
         val identifiants = LinkedHashMap<String, IdentifiantPrd>()
@@ -47,7 +48,7 @@ class DepotDeSpecifications(private val racine: Path) {
     }
 
     private fun chargerTable(): TableDeDerivation? {
-        val fichier = racine / "docs" / "table-de-derivation.md"
+        val fichier = chemins.tableDerivation
         if (!fichier.exists()) return null
         val regexLigne = Regex("""^\|\s*(\d+)\s*\|\s*(epic-\d+)\s*\|""")
         val epics = LinkedHashMap<Int, String>()
@@ -59,7 +60,7 @@ class DepotDeSpecifications(private val racine: Path) {
     }
 
     private fun chargerEpics(): List<Epic> {
-        val dossier = racine / "docs" / "epics"
+        val dossier = chemins.epics
         if (!dossier.isDirectory()) return emptyList()
         return dossier.listDirectoryEntries("*.md").sorted().map { fichier ->
             val fm = lecteur.lire(fichier.readText())
@@ -78,7 +79,7 @@ class DepotDeSpecifications(private val racine: Path) {
     }
 
     private fun chargerFeatures(): List<Feature> {
-        val dossier = racine / "docs" / "features"
+        val dossier = chemins.features
         if (!dossier.isDirectory()) return emptyList()
         val features = mutableListOf<Feature>()
         for (sousDossier in dossier.listDirectoryEntries().filter { it.isDirectory() }.sorted()) {
