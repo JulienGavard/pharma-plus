@@ -1,32 +1,33 @@
 # Table de dérivation — PRD → Épics
 
-**Générée le** : 2026-06-08
-**Source** : PRD.md + ADR-L1-002
+**Générée le** : 2026-06-08 (ID PRD ajoutés le 2026-06-09)
+**Source** : docs/PRD.md + ADR-L1-002
 
-| Section PRD | Épic(s) dérivé(s) |
+Les références utilisent les identifiants stables du PRD (ADR-L1-006).
+
+| Élément PRD | Épic(s) dérivé(s) |
 |---|---|
-| Objectif : visibilité permanente sur le stock | Inventaire du stock |
-| Objectif : éviter achats inutiles, gaspillage, prises périmées | Inventaire du stock + Alertes & prévention du gaspillage |
-| Objectif : estimer les économies sur le reste à charge (ADR-L1-002) | Suivi des économies & reste à charge |
-| Critère : < 10 secondes pour vérifier possession et validité | Inventaire du stock |
-| Critère : ne rachète plus ce qu'il possède déjà | Inventaire du stock |
-| Critère : alerte avant péremption | Alertes & prévention du gaspillage |
-| Critère : < 30 secondes pour ajouter ou consommer | Inventaire du stock |
-| Critère : consulter les économies estimées | Suivi des économies & reste à charge |
-| Contrainte légale : RGPD, HDS, consentement, effacement | Conformité & données personnelles |
-| Contrainte légale : pas de recommandation médicale | Transversale — aucun épic dédié |
-| Contrainte technique : scan offline + base CIP/ANSM | Inventaire du stock |
-| Contrainte technique : prix et taux sécu via CIP/ANSM | Suivi des économies & reste à charge |
-| Contrainte remboursement : saisie taux mutuelle + calcul auto | Suivi des économies & reste à charge |
-| Contrainte business : zéro friction à l'ajout | Inventaire du stock |
+| `OBJ` (visibilité permanente sur le stock) | epic-1 Inventaire du stock |
+| `OBJ` (éviter achats inutiles, gaspillage, prises périmées) | epic-1 + epic-2 |
+| `OBJ` / `CS-5` (estimer les économies sur le reste à charge — ADR-L1-002) | epic-3 Suivi des économies & reste à charge |
+| `CS-1` (< 10 s pour vérifier possession et validité) | epic-1 |
+| `CS-2` (ne rachète plus ce qu'il possède déjà) | epic-1 |
+| `CS-3` (alerte avant péremption) | epic-2 |
+| `CS-4` (< 30 s pour ajouter ou consommer) | epic-1 |
+| `CL-1` `CL-2` `CL-3` (RGPD, HDS, offline-first) | epic-4 Conformité & données personnelles |
+| `CL-4` (pas de recommandation médicale) | Transversale — interdiction, aucun épic dédié (ADR-L1-006) |
+| `CT-1` (scan offline) | epic-1 + epic-4 |
+| `CT-2` (prix et taux sécu via CIP/ANSM) | epic-1 + epic-3 |
+| `CR-1` `CR-2` (saisie taux mutuelle + calcul auto) | epic-3 |
+| `CB-1` (zéro friction à l'ajout) | epic-1 |
 
 ## Épics produits
 
 Le numéro d'épic est stable et fait autorité (voir ADR-L2-005) : il détermine le préfixe `N` des features (`N.M`) et ne change jamais une fois attribué.
 
-| N° | Épic | Priorité | Lot |
-|---|---|---|---|
-| 1 | Inventaire du stock | Critique | Lot 1 |
-| 2 | Alertes & prévention du gaspillage | Haute | Lot 1 |
-| 3 | Suivi des économies & reste à charge | Haute | Lot 1 |
-| 4 | Conformité & données personnelles | Critique | Lot 1 |
+| N° | id | Épic | Priorité | Lot |
+|---|---|---|---|---|
+| 1 | epic-1 | Inventaire du stock | critique | 1 |
+| 2 | epic-2 | Alertes & prévention du gaspillage | haute | 1 |
+| 3 | epic-3 | Suivi des économies & reste à charge | haute | 1 |
+| 4 | epic-4 | Conformité & données personnelles | critique | 1 |
