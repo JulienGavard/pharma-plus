@@ -1,0 +1,13 @@
+# Runtime Claude Code
+.claude/scheduled_tasks.lock
+.claude/settings.local.json
+
+# Kotlin / Gradle
+.gradle/
+build/
+**/build/
+*.class
+
+# IntelliJ IDEA
+.idea/
+*.iml
