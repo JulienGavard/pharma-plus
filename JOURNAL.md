@@ -116,3 +116,31 @@ Des incohérences qui feraient échouer le harnais dès le premier run : le PRD 
 ### Ordre recommandé
 
 (1) Nettoyer les bloquants ; (2) retrofiter ID + frontmatter sur PRD, épics et features (touche le PRD → ADR-L1 obligatoire) ; (3) écrire le schéma + `validate.py` ; (4) brancher la boucle dans le skill et lier chaque ADR-de-sortie à son test. Chacune de ces étapes mérite probablement son propre ADR.
+
+## 2026-06-09 — Étape 1 : nettoyage des bloquants
+
+Nous avons exécuté la première étape de la roadmap du harnais en levant les incohérences structurelles. Le PRD, qui vivait à la racine alors que tous les ADR le référencent sous `docs/`, a été déplacé vers `docs/PRD.md` — simple mise en conformité, sans nouvel ADR. Le fichier `questions-ouvertes.md`, orphelin à la racine, a été déplacé sous `docs/` et explicitement gouverné par ADR-L1-005 : nous avons choisi de le garder comme artefact séparé plutôt que de le fondre dans le PRD, pour séparer nettement la vision stable des questions mouvantes. Enfin, ADR-L2-005 a fait de la table de dérivation la source d'autorité du numéro d'épic — jusque-là implicite, donc source silencieuse de non-déterminisme sur les noms de fichiers des features.
+
+## 2026-06-09 — Étape 2 : identifiants stables et frontmatter machine-lisible
+
+Nous avons réalisé le cœur du dispositif : rendre les artefacts lisibles par une machine. Quatre ADR ont été posés — ADR-L1-006 (identifiants stables des éléments du PRD : PROB, OBJ, CS-*, CL-*, CT-*, CR-*, CB-*), ADR-L2-006 (l'algorithme de slug défini comme fonction pure et partagée), ADR-L2-007 et ADR-L3-002 (frontmatter YAML des épics et features). Le PRD a été instrumenté avec ses ID et la table de dérivation passée au même vocabulaire. Une décision de conception importante : le slug est désormais une fonction pure du titre, jamais un choix libre — sinon une régénération rechoisirait les noms de fichiers et ruinerait le déterminisme.
+
+En instrumentant les `source_prd`, nous avons découvert un trou de couverture — la contrainte CL-2 (hébergeur HDS si cloud) n'était portée par aucune feature — et l'avons rattachée au stockage local offline, qui est précisément ce qui décharge cette obligation. C'est la preuve par l'usage que le dispositif attrape ce qu'il doit attraper, avant même que le validateur existe.
+
+## 2026-06-09 — Demander avant de modifier, et purge des artefacts générés
+
+Deux décisions de méthode. D'abord, l'utilisateur a demandé à être consulté avant toute modification de fichier ; nous avons préféré une garantie au niveau du harnais (permissions `Edit`/`Write` en « ask » dans les settings locaux) plutôt que de compter sur la seule mémoire — le harnais affiche désormais un prompt avant chaque écriture. Ensuite, les épics et features générés ont été supprimés volontairement : ils sont régénérables à tout moment par le product-manager, et renaîtront cette fois directement avec leur frontmatter. Le cadre de l'étape 2 (ADR, PRD instrumenté, table) reste en place ; seuls les artefacts dérivés ont été vidés, en attendant leur régénération avant l'écriture du validateur.
+
+## 2026-06-09 — Un document de gouvernance, et la grande clarification : trois natures de décision
+
+Nous avons d'abord créé `docs/gouvernance.md`, une vue d'ensemble du système qui manquait : ni le journal (récit) ni les ADR (décisions atomiques) ne donnaient la carte complète des principes, artefacts, règles et flux de travail.
+
+En le relisant, une question de fond a émergé : le mot « ADR » recouvrait en réalité trois natures de décision radicalement différentes — la **gouvernance** (comment on fabrique les specs), le **produit** (ce que Pharma Plus fait), et l'**architecture logicielle** (comment l'app est techniquement construite, nature qui n'avait aucun foyer alors qu'elle arrivera avec le code). La hiérarchie L0–L3 classait par artefact touché, pas par nature, si bien qu'un même dossier mélangeait gouvernance et produit. Nous avons tranché pour une séparation complète en **trois registres par nature** : `gouvernance/` (records GDR, niveaux L0–L3 conservés), `produit/` (records PDR), `architecture/` (records ADR, le terme retrouvant son sens canonique, dossier réservé jusqu'au démarrage du dev).
+
+Deux décisions importantes accompagnent ce choix. D'une part, une **migration sanctionnée** de tous les records existants vers le registre de gouvernance, sauf la décision sur les économies (nature produit) qui rejoint `produit/` — le projet étant jeune et petit, c'est le moment le moins coûteux pour réorganiser. D'autre part, nous avons **assoupli la règle d'immuabilité** : désormais les **références croisées** d'un record peuvent être modifiées (le contenu décisionnel, lui, reste immuable), ce qui rend la migration possible sans laisser de citations caduques. Le record fondateur de cette taxonomie est `GDR-L0-004`.
+
+## 2026-06-09 — Exécution de la migration et naissance du Gouverneur
+
+Nous avons exécuté la migration décidée juste avant. Les ~20 records de gouvernance ont été déplacés vers `gouvernance/` (préfixe `gdr-`, niveaux conservés), la décision économies vers `produit/pdr-001`, et trois templates ont été posés (`pdr-000`, `adr-000`, plus le keystone `gdr-l0-004`). Une décision de structure a émergé en cours de route : le **PRD devient la racine du registre produit** (`produit/PRD.md`), puisqu'il est l'artefact produit fondateur autour duquel gravitent les PDR. Les anciens dossiers `adr-l*`, vidés, ont été supprimés.
+
+Enfin, nous avons créé un nouveau skill, le **Gouverneur**, capable de régénérer `docs/gouvernance.md` à partir de l'état réel des trois registres. Particularité notable : contrairement à la règle d'isolation qui interdit de lire un artefact avant de le régénérer, le Gouverneur a explicitement le droit de relire la version précédente de `gouvernance.md` — car c'est un document de synthèse, pas un artefact dérivé du PRD, et la continuité de ton prime sur le risque de contamination. Reste à finaliser : l'alignement des titres internes des records (ADR → GDR) et la mise à jour des références dans `gouvernance.md`, la table de dérivation et le skill product-manager.
