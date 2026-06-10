@@ -21,19 +21,19 @@ class LecteurDeFrontmatterTest {
     @Test
     fun `lit les cles scalaires`() {
         val fm = lecteur.lire("---\nid: epic-1\ntitre: Inventaire du stock\n---\n# corps")
-        assertEquals("epic-1", fm?.get("id"))
-        assertEquals("Inventaire du stock", fm?.get("titre"))
+        assertEquals("epic-1", fm?.chaine("id"))
+        assertEquals("Inventaire du stock", fm?.chaine("titre"))
     }
 
     @Test
     fun `lit une liste en notation flow`() {
         val fm = lecteur.lire("---\nsource_prd: [CS-4, CT-1, CB-1]\n---\n")
-        assertEquals(listOf("CS-4", "CT-1", "CB-1"), fm?.get("source_prd"))
+        assertEquals(listOf("CS-4", "CT-1", "CB-1"), fm?.liste("source_prd"))
     }
 
     @Test
     fun `retire les guillemets autour des valeurs`() {
         val fm = lecteur.lire("---\nslug: \"scan-code-barres\"\n---\n")
-        assertEquals("scan-code-barres", fm?.get("slug"))
+        assertEquals("scan-code-barres", fm?.chaine("slug"))
     }
 }

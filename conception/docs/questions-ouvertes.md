@@ -29,3 +29,13 @@
 - [ ] **Régénération de la carte à chaque audit.** La Partie B du Gouverneur réécrit `gouvernance.md` à chaque passage ; sur la routine quotidienne, cela peut produire des diffs de prose sans changement de fond — la variabilité LLM que le projet combat par ailleurs. Ne régénérer que sur changement réel des registres ?
 - [ ] **`JOURNAL.md` à la racine** alors que tout le reste du « non-code » est sous `conception/`. Incohérence d'emplacement mineure à trancher.
 - [ ] **`questions-ouvertes` mélange deux portées** (produit via `gdr-l1-005`, organisation via `gdr-l0-009`). La séparation par sections suffit-elle si le volume croît ?
+
+## Remarques du CTO — code
+
+*Remarques non-bloquantes sur le code applicatif (`gdr-l0-010`). Propositions pour le chef d'orchestre — le code est par ailleurs conforme aux ADR et tous les tests passent.*
+
+- [x] **Duplication des fabriques de `Violation`.** ✅ *Traité (2026-06-09)* : fabriques `CategorieViolation.violation(message)` et `violation(chemin, message)` ; interface `Artefact` (chemin + helpers) pour `Epic`/`Feature`. Plus aucun helper privé dupliqué.
+- [x] **Frontmatter faiblement typée.** ✅ *Traité (2026-06-09)* : type `Frontmatter` dédié (`chaine(cle)` / `liste(cle)` via `filterIsInstance`) ; `lire` renvoie `Frontmatter?` ; plus de `@Suppress("UNCHECKED_CAST")`.
+- [x] **`RapportConsole` non testé.** ✅ *Traité (2026-06-09)* : `RapportConsoleTest` sur flux capturé — succès, groupement par catégorie, comptage et total.
+- [ ] **Entités/agrégat en `data class`.** `Specifications` (racine d'agrégat) et `Epic`/`Feature` (entités à identité = leur `chemin`) sont des `data class` : l'égalité structurelle générée n'a pas de sens pour des objets à identité. Une classe normale serait plus juste.
+- [ ] **Lien code ↔ GDR tracé seulement par des commentaires.** `Slug.depuisTitre` (`gdr-l2-006`), la détection d'exempt et les regex du PRD/table encodent des règles définies dans les GDR ; rien ne garantit que code et GDR restent synchrones. C'est précisément ce que l'étape 4 doit verrouiller.

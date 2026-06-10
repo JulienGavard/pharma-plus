@@ -1,5 +1,11 @@
 package pharmaplus.harnais.domaine
 
+import pharmaplus.harnais.domaine.CategorieViolation.COUVERTURE
+import pharmaplus.harnais.domaine.CategorieViolation.DERIVATION
+import pharmaplus.harnais.domaine.CategorieViolation.NOMMAGE
+import pharmaplus.harnais.domaine.CategorieViolation.REFERENCE
+import pharmaplus.harnais.domaine.CategorieViolation.UNICITE
+
 /**
  * Racine d'agrégat : l'ensemble cohérent des spécifications à un instant donné
  * (PRD, table, épics, features). Elle compose la validation intrinsèque de ses
@@ -37,8 +43,8 @@ data class Specifications(
         val parFeatures = features.flatMap { it.sourcesPrd }.toSet()
         val v = mutableListOf<Violation>()
         for (code in prd.codesCouvrables().sorted()) {
-            if (code !in parEpics) v += couverture("$code: couvert par aucun épic")
-            if (code !in parFeatures) v += couverture("$code: couvert par aucune feature")
+            if (code !in parEpics) v += COUVERTURE.violation("$code: couvert par aucun épic")
+            if (code !in parFeatures) v += COUVERTURE.violation("$code: couvert par aucune feature")
         }
         return v
     }
@@ -49,10 +55,10 @@ data class Specifications(
         val idsTable = table.identifiants()
         val idsFichiers = epics.mapNotNull { it.id }.toSet()
         val v = mutableListOf<Violation>()
-        for (id in (idsTable - idsFichiers).sorted()) v += derivation("épic « $id » présent dans la table mais sans fichier")
-        for (id in (idsFichiers - idsTable).sorted()) v += derivation("épic « $id » présent en fichier mais absent de la table")
+        for (id in (idsTable - idsFichiers).sorted()) v += DERIVATION.violation("épic « $id » présent dans la table mais sans fichier")
+        for (id in (idsFichiers - idsTable).sorted()) v += DERIVATION.violation("épic « $id » présent en fichier mais absent de la table")
         for ((numero, id) in table.epics) {
-            if (id != "epic-$numero") v += derivation("table: numéro $numero incohérent avec id « $id »")
+            if (id != "epic-$numero") v += DERIVATION.violation("table: numéro $numero incohérent avec id « $id »")
         }
         return v
     }
@@ -73,7 +79,7 @@ data class Specifications(
     private fun violationsDeParente(): List<Violation> {
         val idsEpics = epics.mapNotNull { it.id }.toSet() + (table?.identifiants() ?: emptySet())
         return features.mapNotNull { f ->
-            f.epic?.takeIf { it !in idsEpics }?.let { reference("${f.chemin}: epic parent « $it » inexistant") }
+            f.epic?.takeIf { it !in idsEpics }?.let { REFERENCE.violation(f.chemin, "epic parent « $it » inexistant") }
         }
     }
 
@@ -83,7 +89,7 @@ data class Specifications(
         return features.mapNotNull { f ->
             val slugEpic = slugParEpic[f.epic]
             if (slugEpic != null && f.dossier != slugEpic) {
-                nommage("${f.chemin}: dossier « ${f.dossier} » ≠ slug de l'épic « $slugEpic »")
+                NOMMAGE.violation(f.chemin, "dossier « ${f.dossier} » ≠ slug de l'épic « $slugEpic »")
             } else {
                 null
             }
@@ -91,11 +97,5 @@ data class Specifications(
     }
 
     private fun doublons(valeurs: List<String>, message: (String) -> String): List<Violation> =
-        valeurs.groupingBy { it }.eachCount().filter { it.value > 1 }.keys.map { unicite(message(it)) }
-
-    private fun couverture(m: String) = Violation(CategorieViolation.COUVERTURE, m)
-    private fun derivation(m: String) = Violation(CategorieViolation.DERIVATION, m)
-    private fun unicite(m: String) = Violation(CategorieViolation.UNICITE, m)
-    private fun reference(m: String) = Violation(CategorieViolation.REFERENCE, m)
-    private fun nommage(m: String) = Violation(CategorieViolation.NOMMAGE, m)
+        valeurs.groupingBy { it }.eachCount().filter { it.value > 1 }.keys.map { UNICITE.violation(message(it)) }
 }

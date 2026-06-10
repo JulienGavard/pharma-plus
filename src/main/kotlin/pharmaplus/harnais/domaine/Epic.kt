@@ -5,7 +5,7 @@ package pharmaplus.harnais.domaine
  * Il porte sa propre validation : modèle de domaine non anémique (adr-003).
  */
 data class Epic(
-    val chemin: String,
+    override val chemin: String,
     val nomFichier: String,
     val frontmatterPresente: Boolean,
     val id: String?,
@@ -14,7 +14,7 @@ data class Epic(
     val priorite: String?,
     val lot: String?,
     val sourcesPrd: List<String>,
-) {
+) : Artefact {
     /** Numéro N extrait de l'id « epic-N », ou null si l'id est absent/malformé. */
     val numero: Int?
         get() = id?.takeIf { it.startsWith("epic-") }?.removePrefix("epic-")?.toIntOrNull()
@@ -49,8 +49,4 @@ data class Epic(
     /** Violations de référence intrinsèques : chaque source_prd existe dans le PRD. */
     fun violationsDeReference(prd: Prd): List<Violation> =
         sourcesPrd.filterNot { prd.contient(it) }.map { reference("source_prd « $it » absent du PRD") }
-
-    private fun structure(message: String) = Violation(CategorieViolation.STRUCTURE, "$chemin: $message")
-    private fun nommage(message: String) = Violation(CategorieViolation.NOMMAGE, "$chemin: $message")
-    private fun reference(message: String) = Violation(CategorieViolation.REFERENCE, "$chemin: $message")
 }

@@ -6,19 +6,19 @@ package pharmaplus.harnais.infrastructure
  */
 class LecteurDeFrontmatter {
 
-    /** Map clé → valeur (String ou List<String>), ou null si aucune frontmatter. */
-    fun lire(contenu: String): Map<String, Any>? {
+    /** Retourne la frontmatter typée, ou null si le contenu n'en comporte pas. */
+    fun lire(contenu: String): Frontmatter? {
         if (!contenu.startsWith("---")) return null
         val parts = contenu.split("---", limit = 3)
         if (parts.size < 3) return null
 
-        val map = mutableMapOf<String, Any>()
+        val champs = mutableMapOf<String, Any>()
         for (ligne in parts[1].lines()) {
             val l = ligne.trim()
             if (l.isEmpty() || !l.contains(":")) continue
             val cle = l.substringBefore(":").trim()
             val valeur = l.substringAfter(":").trim()
-            map[cle] = if (valeur.startsWith("[") && valeur.endsWith("]")) {
+            champs[cle] = if (valeur.startsWith("[") && valeur.endsWith("]")) {
                 valeur.removeSurrounding("[", "]")
                     .split(",")
                     .map { it.trim().trim('\'', '"') }
@@ -27,6 +27,6 @@ class LecteurDeFrontmatter {
                 valeur.trim('\'', '"')
             }
         }
-        return map
+        return Frontmatter(champs)
     }
 }

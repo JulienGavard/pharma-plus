@@ -68,12 +68,12 @@ class DepotDeSpecifications(private val racine: Path) {
                 chemin = cheminRelatif(fichier),
                 nomFichier = fichier.nameWithoutExtension,
                 frontmatterPresente = fm != null,
-                id = fm.chaine("id"),
-                slug = fm.chaine("slug"),
-                titre = fm.chaine("titre"),
-                priorite = fm.chaine("priorite"),
-                lot = fm.chaine("lot"),
-                sourcesPrd = fm.liste("source_prd"),
+                id = fm?.chaine("id"),
+                slug = fm?.chaine("slug"),
+                titre = fm?.chaine("titre"),
+                priorite = fm?.chaine("priorite"),
+                lot = fm?.chaine("lot"),
+                sourcesPrd = fm?.liste("source_prd") ?: emptyList(),
             )
         }
     }
@@ -90,13 +90,13 @@ class DepotDeSpecifications(private val racine: Path) {
                     nomFichier = fichier.nameWithoutExtension,
                     dossier = sousDossier.name,
                     frontmatterPresente = fm != null,
-                    id = fm.chaine("id"),
-                    epic = fm.chaine("epic"),
-                    slug = fm.chaine("slug"),
-                    titre = fm.chaine("titre"),
-                    priorite = fm.chaine("priorite"),
-                    lot = fm.chaine("lot"),
-                    sourcesPrd = fm.liste("source_prd"),
+                    id = fm?.chaine("id"),
+                    epic = fm?.chaine("epic"),
+                    slug = fm?.chaine("slug"),
+                    titre = fm?.chaine("titre"),
+                    priorite = fm?.chaine("priorite"),
+                    lot = fm?.chaine("lot"),
+                    sourcesPrd = fm?.liste("source_prd") ?: emptyList(),
                 )
             }
         }
@@ -110,9 +110,3 @@ class DepotDeSpecifications(private val racine: Path) {
         const val MARQUEUR_EXEMPT = "non soumise à l'obligation de couverture"
     }
 }
-
-private fun Map<String, Any>?.chaine(cle: String): String? = this?.get(cle) as? String
-
-@Suppress("UNCHECKED_CAST")
-private fun Map<String, Any>?.liste(cle: String): List<String> =
-    this?.get(cle) as? List<String> ?: emptyList()

@@ -5,7 +5,7 @@ package pharmaplus.harnais.domaine
  * Elle porte sa propre validation : modèle de domaine non anémique (adr-003).
  */
 data class Feature(
-    val chemin: String,
+    override val chemin: String,
     val nomFichier: String,
     val dossier: String,
     val frontmatterPresente: Boolean,
@@ -16,7 +16,7 @@ data class Feature(
     val priorite: String?,
     val lot: String?,
     val sourcesPrd: List<String>,
-) {
+) : Artefact {
     /** Couple (numéro d'épic, numéro de feature) extrait de l'id « feat-N.M », ou null. */
     val numeros: Pair<Int, Int>?
         get() {
@@ -70,8 +70,4 @@ data class Feature(
         }
         return v
     }
-
-    private fun structure(message: String) = Violation(CategorieViolation.STRUCTURE, "$chemin: $message")
-    private fun nommage(message: String) = Violation(CategorieViolation.NOMMAGE, "$chemin: $message")
-    private fun reference(message: String) = Violation(CategorieViolation.REFERENCE, "$chemin: $message")
 }
