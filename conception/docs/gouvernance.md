@@ -90,6 +90,8 @@ Les niveaux du registre de gouvernance : `L0` gouverne les records eux-mêmes, `
 | Taxonomie en trois registres + routage par nature | `gdr-l0-004` | Gouvernance, produit et logiciel ne se mélangent plus |
 | Le Gouverneur vérifie la conformité GDR ; bloque et journalise un conflit en cas d'infraction | `gdr-l0-005` | Les règles deviennent contrôlées, pas seulement espérées |
 | Externalisation de la roadmap | `gdr-l0-006` | La carte stable n'est pas régénérée à chaque avancement |
+| Regroupement sous `registres/` puis tout le non-code sous `conception/` ; chemins centralisés dans `chemins.properties` | `gdr-l0-007`, `gdr-l0-008` | Racine décluttée ; un seul fichier à toucher pour un déplacement |
+| Le Gouverneur critique l'organisation ; remarques non-bloquantes en questions ouvertes | `gdr-l0-009` | Les améliorations sont captées sans bloquer |
 | Le PRD n'évolue qu'en conséquence d'un PDR | `gdr-l1-007`, `gdr-l0-004` | La vision ne change jamais en silence ; le PDR est le record primaire |
 | Externalisation des questions ouvertes | `gdr-l1-005` | La vision stable reste séparée des questions mouvantes |
 | Identifiants stables du PRD | `gdr-l1-006` | Traçabilité vérifiable par référence, pas par position |
@@ -116,8 +118,8 @@ Point d'entrée : « idée à explorer » ou « génération » ?
         └─ Génération :
               1. Lire tous les GDR (L0 → L3, ordre croissant)
               2. Construire et sauvegarder la table de dérivation (PRD → épics)
-              3. Générer les épics (docs/epics/) puis les features (docs/features/)
-              4. [cible] Lancer validate.py → si rouge, régénérer jusqu'au vert
+              3. Générer les épics (conception/specifications/epics/) puis les features (conception/specifications/features/)
+              4. Lancer le harnais Kotlin (`gradlew run`) → si rouge, régénérer jusqu'au vert
               5. Comparer avec la génération précédente (diff lisible)
               6. Appeler l'Archiviste pour tracer la session
 ```
@@ -132,13 +134,13 @@ La règle qui fermera la boucle : **un artefact qui ne passe pas le harnais n'es
 |-------|------|
 | **Product Manager** | Clarifie la vision par le dialogue, puis génère PRD / épics / features en appliquant les GDR. Tout changement produit devient un PDR ; il ne descend jamais dans le détail sans demande explicite. |
 | **Archiviste** | Tient le `JOURNAL.md` : à la fin de chaque session, ajoute une entrée narrative racontant les décisions prises et pourquoi. |
-| **Gouverneur** | **Gardien de la conformité GDR** : vérifie qu'aucune règle n'est enfreinte (par l'utilisateur, le Product Manager ou Claude) ; en cas d'infraction, **stoppe la modification et journalise un conflit** dans `conflits/` (`gdr-l0-005`). Maintient en sous-produit cette carte `docs/gouvernance.md`. |
+| **Gouverneur** | **Gardien de la conformité GDR** : vérifie qu'aucune règle n'est enfreinte (par l'utilisateur, le Product Manager ou Claude) ; en cas d'infraction, **stoppe la modification et journalise un conflit** dans `conflits/` (`gdr-l0-005`). **Critique l'organisation** : remarques non-bloquantes ajoutées aux questions ouvertes (`gdr-l0-009`). Maintient en sous-produit cette carte (`conception/docs/gouvernance.md`). |
 
 ---
 
 ## 7. La roadmap
 
-La roadmap du harnais est **externalisée** dans [`docs/roadmap.md`](roadmap.md) (`gdr-l0-006`) : c'est un document mouvant, dont l'état évolue à chaque avancement, tenu à l'écart des principes stables de cette carte.
+La roadmap du harnais est **externalisée** dans [`conception/docs/roadmap.md`](roadmap.md) (`gdr-l0-006`) : c'est un document mouvant, dont l'état évolue à chaque avancement, tenu à l'écart des principes stables de cette carte.
 
 ---
 

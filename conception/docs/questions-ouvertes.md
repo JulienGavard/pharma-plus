@@ -17,3 +17,15 @@
 - [ ] Les codes-barres des boîtes de médicaments contiennent suffisamment d'information pour auto-compléter les champs
 - [ ] L'utilisateur pense à ouvrir l'application avant d'aller à la pharmacie
 - [ ] La valeur perçue est suffisante pour justifier l'effort de maintenir l'inventaire à jour
+
+## Remarques du Gouverneur — organisation
+
+*Remarques non-bloquantes sur l'organisation du dépôt (`gdr-l0-009`). Ce sont des propositions pour le chef d'orchestre, pas des actions ni des infractions.*
+
+- [ ] **Double source de chemins.** `chemins.properties` se veut source unique, mais `infrastructure/Chemins.kt` redéfinit des valeurs par défaut en dur. Si elles divergent, ambiguïté silencieuse. Faut-il supprimer les défauts (et échouer explicitement si le fichier manque) ?
+- [ ] **Couverture de tests partielle.** Seul le domaine est testé. L'infrastructure — parsing du PRD, de la frontmatter, lecture du dépôt — est de la logique technique non triviale, sans aucun test. Un bug de parsing passerait inaperçu.
+- [ ] **Toutes les règles GDR de sortie ne sont pas encore testées.** Le harnais valide les épics/features/table, mais pas la conformité des records eux-mêmes (préfixes `gdr-`/`pdr-`/`adr-`, niveaux, templates). Ces règles restent « espérées » plutôt que « garanties » — c'est l'objet de l'étape 4.
+- [ ] **Le PRD est rangé parmi les décisions** (`registres/produit/`) alors que `gdr-l1-007` pose qu'il *découle* des PDR. Est-ce une décision, ou un artefact dérivé qui aurait sa place dans `specifications/` ? Frontière conceptuelle à clarifier.
+- [ ] **Régénération de la carte à chaque audit.** La Partie B du Gouverneur réécrit `gouvernance.md` à chaque passage ; sur la routine quotidienne, cela peut produire des diffs de prose sans changement de fond — la variabilité LLM que le projet combat par ailleurs. Ne régénérer que sur changement réel des registres ?
+- [ ] **`JOURNAL.md` à la racine** alors que tout le reste du « non-code » est sous `conception/`. Incohérence d'emplacement mineure à trancher.
+- [ ] **`questions-ouvertes` mélange deux portées** (produit via `gdr-l1-005`, organisation via `gdr-l0-009`). La séparation par sections suffit-elle si le volume croît ?

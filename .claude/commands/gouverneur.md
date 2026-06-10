@@ -57,6 +57,18 @@ Référence : `$GOUVERNANCE/gdr-l0-005` (rôle du Gouverneur) et `$GOUVERNANCE/g
 
 ---
 
-Quand tu as terminé, indique le résultat de la vérification (conforme, ou conflits journalisés) puis termine par :
+## PARTIE C — Critique de l'organisation (`gdr-l0-009`)
 
-> "Vérification de conformité effectuée ; `$CARTE_GOUVERNANCE` est régénéré à partir de l'état courant des trois registres."
+Prends du recul et porte un regard critique sur l'**ensemble de l'organisation** du dépôt : cohérence de la taxonomie, lisibilité, redondances, frontières floues entre dossiers ou records, dette, incohérences, ergonomie du flux de travail.
+
+Distingue bien deux choses :
+- une **infraction** à une règle GDR → c'est un **conflit** (Partie A), bloquant, journalisé dans `$CONFLITS`.
+- une **remarque, critique ou amélioration** non-bloquante → c'est une **question ouverte**, traitée ici.
+
+Si tu as des remarques, ajoute-les dans `$QUESTIONS_OUVERTES`, sous une section **« Remarques du Gouverneur — organisation »** (crée-la si elle n'existe pas). N'ajoute que des remarques **nouvelles** — relis la section pour ne pas dupliquer. Si tu n'as rien à signaler, ne touche pas au fichier. Une remarque est une **proposition** pour le chef d'orchestre ; tu ne réorganises jamais toi-même.
+
+---
+
+Quand tu as terminé, indique le résultat de la vérification (conforme, ou conflits journalisés) et de la critique (remarques ajoutées, ou rien à signaler), puis termine par :
+
+> "Vérification de conformité et critique de l'organisation effectuées ; `$CARTE_GOUVERNANCE` est régénéré à partir de l'état courant des trois registres."
