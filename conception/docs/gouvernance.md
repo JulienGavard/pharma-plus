@@ -134,7 +134,8 @@ La règle qui fermera la boucle : **un artefact qui ne passe pas le harnais n'es
 |-------|------|
 | **Product Manager** | Clarifie la vision par le dialogue, puis génère PRD / épics / features en appliquant les GDR. Tout changement produit devient un PDR ; il ne descend jamais dans le détail sans demande explicite. |
 | **Archiviste** | Tient le `JOURNAL.md` : à la fin de chaque session, ajoute une entrée narrative racontant les décisions prises et pourquoi. |
-| **Gouverneur** | **Gardien de la conformité GDR** : vérifie qu'aucune règle n'est enfreinte (par l'utilisateur, le Product Manager ou Claude) ; en cas d'infraction, **stoppe la modification et journalise un conflit** dans `conflits/` (`gdr-l0-005`). **Critique l'organisation** : remarques non-bloquantes ajoutées aux questions ouvertes (`gdr-l0-009`). Maintient en sous-produit cette carte (`conception/docs/gouvernance.md`). |
+| **Gouverneur** | **Gardien de la conformité GDR** — périmètre : organisation, démarche, roadmap, fonctionnel (**pas le code**, `gdr-l0-010`). Vérifie qu'aucune règle n'est enfreinte ; en cas d'infraction, **stoppe et journalise un conflit** dans `conflits/` (`gdr-l0-005`). **Critique l'organisation** : remarques non-bloquantes aux questions ouvertes (`gdr-l0-009`). Maintient en sous-produit cette carte. |
+| **CTO** | **Gardien du code applicatif** (`src/`). Vérifie la conformité du code aux **ADR** et sa qualité (build/tests, lisibilité, dette) ; en cas d'infraction, **stoppe et journalise un conflit** dans `conflits/`. **Critique le code** : remarques non-bloquantes aux questions ouvertes (`gdr-l0-010`). |
 
 ---
 
