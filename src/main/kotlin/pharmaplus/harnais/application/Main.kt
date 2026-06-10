@@ -11,5 +11,5 @@ import kotlin.system.exitProcess
  */
 fun main(args: Array<String>) {
     val racine = Path(args.firstOrNull() ?: "").absolute()
-    exitProcess(Validateur(racine).valider())
+    exitProcess(Harnais(racine).executer())
 }
