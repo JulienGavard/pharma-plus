@@ -22,7 +22,7 @@
 
 *Remarques non-bloquantes sur l'organisation du dépôt (`gdr-l0-009`). Ce sont des propositions pour le chef d'orchestre, pas des actions ni des infractions.*
 
-- [ ] **Double source de chemins.** `chemins.properties` se veut source unique, mais `infrastructure/Chemins.kt` redéfinit des valeurs par défaut en dur. Si elles divergent, ambiguïté silencieuse. Faut-il supprimer les défauts (et échouer explicitement si le fichier manque) ?
+- [x] **Double source de chemins.** ✅ *Traité (2026-06-09)* : les défauts en dur de `infrastructure/Chemins.kt` sont supprimés ; `chemins.properties` est l'unique source. Un fichier ou une clé manquante échoue désormais explicitement (couvert par `CheminsTest`).
 - [ ] **Couverture de tests partielle.** Seul le domaine est testé. L'infrastructure — parsing du PRD, de la frontmatter, lecture du dépôt — est de la logique technique non triviale, sans aucun test. Un bug de parsing passerait inaperçu.
 - [ ] **Toutes les règles GDR de sortie ne sont pas encore testées.** Le harnais valide les épics/features/table, mais pas la conformité des records eux-mêmes (préfixes `gdr-`/`pdr-`/`adr-`, niveaux, templates). Ces règles restent « espérées » plutôt que « garanties » — c'est l'objet de l'étape 4.
 - [ ] **Le PRD est rangé parmi les décisions** (`registres/produit/`) alors que `gdr-l1-007` pose qu'il *découle* des PDR. Est-ce une décision, ou un artefact dérivé qui aurait sa place dans `specifications/` ? Frontière conceptuelle à clarifier.
