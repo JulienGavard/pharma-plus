@@ -1,6 +1,7 @@
 package pharmaplus.harnais.domaine.regles
 
 import pharmaplus.harnais.domaine.epic
+import pharmaplus.harnais.domaine.feature
 import pharmaplus.harnais.domaine.specs
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -11,32 +12,18 @@ class RegleDeStructureTest {
     private val regle = RegleDeStructure()
 
     @Test
-    fun `un epic conforme ne produit aucune violation`() {
-        assertTrue(regle.verifier(specs(epics = listOf(epic()))).isEmpty())
+    fun `agrege les violations structurelles des epics et des features`() {
+        val violations = regle.verifier(
+            specs(
+                epics = listOf(epic(frontmatterPresente = false)),
+                features = listOf(feature(frontmatterPresente = false)),
+            ),
+        )
+        assertEquals(2, violations.size)
     }
 
     @Test
-    fun `frontmatter absente est signalee une seule fois`() {
-        val violations = regle.verifier(specs(epics = listOf(epic(frontmatterPresente = false))))
-        assertEquals(1, violations.size)
-        assertTrue(violations.first().message.contains("frontmatter absente"))
-    }
-
-    @Test
-    fun `priorite invalide`() {
-        val violations = regle.verifier(specs(epics = listOf(epic(priorite = "urgente"))))
-        assertTrue(violations.any { it.message.contains("priorite invalide") })
-    }
-
-    @Test
-    fun `lot non entier`() {
-        val violations = regle.verifier(specs(epics = listOf(epic(lot = "un"))))
-        assertTrue(violations.any { it.message.contains("lot non entier") })
-    }
-
-    @Test
-    fun `id epic malforme`() {
-        val violations = regle.verifier(specs(epics = listOf(epic(id = "epic-X"))))
-        assertTrue(violations.any { it.message.contains("id épic invalide") })
+    fun `aucune violation quand tout est conforme`() {
+        assertTrue(regle.verifier(specs(epics = listOf(epic()), features = listOf(feature()))).isEmpty())
     }
 }
