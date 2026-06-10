@@ -1,6 +1,7 @@
 # Runtime Claude Code
 .claude/scheduled_tasks.lock
 .claude/settings.local.json
+.claude/settings.json
 
 # Kotlin / Gradle
 .gradle/

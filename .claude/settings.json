@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "PowerShell(Set-Location \"c:\\\\Users\\\\julie\\\\pharma-plus\"; $env:JAVA_HOME = \"C:\\\\Program Files\\\\Eclipse Adoptium\\\\jdk-21.0.11.10-hotspot\"; .\\\\gradlew.bat compileKotlin --no-daemon --console=plain -q 2>&1 | Select-Object -Last 12; Write-Output \"exit=$LASTEXITCODE\")",
-      "Bash(git commit -m ' *)"
-    ]
-  }
-}
