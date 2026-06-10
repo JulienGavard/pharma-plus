@@ -12,6 +12,10 @@ L'objectif de déterminisme se construit en étapes, chacune cadrée par ses pro
 | **3. Le validateur** | Un schéma par artefact + un script `validate.py` qui lève les violations | ⏳ À venir |
 | **4. Brancher la boucle** | Intégrer `validate.py` au flux du Product Manager, lier chaque GDR-de-sortie à son test | ⏳ À venir |
 
+## Autres chantiers
+
+- **Index par registre** ⏳ — Dans chaque registre (`gouvernance/`, `produit/`, `architecture/`), ajouter un fichier d'index contenant un **tableau résumé des records** : au minimum l'**identifiant**, le **statut**, le **nom** du record, et les **références croisées** éventuelles (records supersédés, annulés, complétés).
+
 ## Les catégories de tests visées
 
 - **Structurel** — frontmatter présente, champs obligatoires non vides, énumérations valides.
